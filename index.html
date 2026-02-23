@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <!-- 網站基本設定 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural AI Lab</title>
+    
+    <!-- 字體設定：使用系統無襯線字體 -->
+    <style>
+        /* ==================== 基礎重置 ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ==================== CSS 變數定義 ==================== */
+        :root {
+            --color-black: #000000;
+            --color-white: #FFFFFF;
+            --color-yellow: #FFC107;
+        }
+
+        /* ==================== 全局樣式 ==================== */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", "Noto Sans SC", sans-serif;
+            background-color: var(--color-black);
+            color: var(--color-white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ==================== 導航列樣式 ==================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: var(--color-black);
+        }
+
+        /* 語言切換按鈕容器 */
+        .lang-switcher {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* 語言切換按鈕樣式 */
+        .lang-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 2px solid var(--color-white);
+            background-color: transparent;
+            color: var(--color-white);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 0;
+        }
+
+        /* 語言按鈕懸停效果 */
+        .lang-btn:hover {
+            background-color: var(--color-white);
+            color: var(--color-black);
+        }
+
+        /* 當前選中語言按鈕樣式（黃色高亮） */
+        .lang-btn.active {
+            background-color: var(--color-yellow);
+            border-color: var(--color-yellow);
+            color: var(--color-black);
+        }
+
+        .lang-btn.active:hover {
+            background-color: var(--color-yellow);
+            color: var(--color-black);
+        }
+
+        /* ==================== Hero 區域樣式 ==================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 20px 60px;
+            text-align: center;
+        }
+
+        /* Logo 容器（1:1 正方形） */
+        .logo-container {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 主標題 */
+        .main-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 16px;
+            color: var(--color-white);
+        }
+
+        /* 副標題 */
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-weight: 400;
+            color: var(--color-white);
+            opacity: 0.85;
+            letter-spacing: 2px;
+        }
+
+        /* ==================== 內容區塊樣式 ==================== */
+        .section {
+            padding: 80px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 區塊標題 */
+        .section-title {
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: var(--color-yellow);
+            letter-spacing: 2px;
+        }
+
+        /* 區塊內容文字 */
+        .section-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--color-white);
+            opacity: 0.9;
+        }
+
+        /* ==================== 研究方向列表樣式 ==================== */
+        .research-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .research-list li {
+            font-size: 1.1rem;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--color-white);
+            opacity: 0.9;
+        }
+
+        .research-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* 研究項目編號 */
+        .research-list li::before {
+            content: "▸ ";
+            color: var(--color-yellow);
+            margin-right: 8px;
+        }
+
+        /* ==================== 頁腳樣式 ==================== */
+        .footer {
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: var(--color-white);
+            opacity: 0.5;
+            letter-spacing: 1px;
+        }
+
+        /* ==================== 響應式設計 ==================== */
+        /* 平板裝置 (iPad) */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 16px 24px;
+            }
+
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+
+            .logo-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .section {
+                padding: 60px 24px;
+            }
+        }
+
+        /* 手機裝置 */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 12px 16px;
+                justify-content: center;
+            }
+
+            .lang-switcher {
+                gap: 8px;
+            }
+
+            .lang-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+                border-width: 1.5px;
+            }
+
+            .logo-container {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 32px;
+            }
+
+            .hero {
+                padding: 80px 16px 40px;
+            }
+
+            .section {
+                padding: 48px 16px;
+            }
+
+            .research-list li {
+                font-size: 1rem;
+                padding: 14px 0;
+            }
+        }
+
+        /* ==================== 語言內容顯示控制 ==================== */
+        /* 預設隱藏所有語言內容 */
+        .lang-content {
+            display: none;
+        }
+
+        /* 當語言被選中時顯示 */
+        .lang-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== 導航列 ==================== -->
+    <nav class="navbar">
+        <!-- 語言切換按鈕群組 -->
+        <div class="lang-switcher">
+            <button class="lang-btn active" data-lang="zh-TW" onclick="switchLang('zh-TW')">繁體</button>
+            <button class="lang-btn" data-lang="zh-CN" onclick="switchLang('zh-CN')">簡體</button>
+            <button class="lang-btn" data-lang="en" onclick="switchLang('en')">English</button>
+        </div>
+    </nav>
+
+    <!-- ==================== Hero 區域 ==================== -->
+    <section class="hero">
+        <!-- Logo 區域（1:1 正方形） -->
+        <div class="logo-container">
+            <img src="logo.png" alt="Neural AI Lab Logo">
+        </div>
+        
+        <!-- 主標題 -->
+        <h1 class="main-title">Neural AI Lab</h1>
+        
+        <!-- 副標題（三語言版本） -->
+        <p class="subtitle lang-content zh-TW active">獨立AI研究室 · 神經網路與人工智慧研究</p>
+        <p class="subtitle lang-content zh-CN">独立AI研究室 · 神经网络与人工智能研究</p>
+        <p class="subtitle lang-content en">Independent AI Research · Neural Networks & Artificial Intelligence</p>
+    </section>
+
+    <!-- ==================== 關於我區域 ==================== -->
+    <section class="section">
+        <!-- 繁體中文版本 -->
+        <div class="lang-content zh-TW active">
+            <h2 class="section-title">關於我</h2>
+            <p class="section-content">
+                我是獨立AI研究者，專注神經網路、模型架構與AI基礎原理研究。目前以個人研究室形式進行探索、實驗與分享。
+            </p>
+        </div>
+        
+        <!-- 簡體中文版本 -->
+        <div class="lang-content zh-CN">
+            <h2 class="section-title">关于我</h2>
+            <p class="section-content">
+                我是独立AI研究者，专注神经网络、模型架构与AI基础原理研究。目前以个人研究室形式进行探索、实验与分享。
+            </p>
+        </div>
+        
+        <!-- 英文版本 -->
+        <div class="lang-content en">
+            <h2 class="section-title">About Me</h2>
+            <p class="section-content">
+                I am an independent AI researcher, focusing on neural networks, model architecture, and fundamental AI research. Currently exploring and sharing insights as a personal research lab.
+            </p>
+        </div>
+    </section>
+
+    <!-- ==================== 研究方向區域 ==================== -->
+    <section class="section">
+        <!-- 繁體中文版本 -->
+        <div class="lang-content zh-TW active">
+            <h2 class="section-title">研究方向</h2>
+            <ul class="research-list">
+                <li>神經網路原理</li>
+                <li>AI模型架構</li>
+                <li>AI實驗與分析</li>
+            </ul>
+        </div>
+        
+        <!-- 簡體中文版本 -->
+        <div class="lang-content zh-CN">
+            <h2 class="section-title">研究方向</h2>
+            <ul class="research-list">
+                <li>神经网络原理</li>
+                <li>AI模型架构</li>
+                <li>AI实验与分析</li>
+            </ul>
+        </div>
+        
+        <!-- 英文版本 -->
+        <div class="lang-content en">
+            <h2 class="section-title">Research Focus</h2>
+            <ul class="research-list">
+                <li>Neural Network Fundamentals</li>
+                <li>AI Model Architecture</li>
+                <li>AI Experiment & Analysis</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ==================== 聯絡方式區域 ==================== -->
+    <section class="section">
+        <!-- 繁體中文版本 -->
+        <div class="lang-content zh-TW active">
+            <h2 class="section-title">聯絡方式</h2>
+            <p class="section-content">
+                歡迎交流AI研究與技術想法，信箱：（請自行填寫）
+            </p>
+        </div>
+        
+        <!-- 簡體中文版本 -->
+        <div class="lang-content zh-CN">
+            <h2 class="section-title">联系方式</h2>
+            <p class="section-content">
+                欢迎交流AI研究与技术想法，邮箱：（请自行填写）
+            </p>
+        </div>
+        
+        <!-- 英文版本 -->
+        <div class="lang-content en">
+            <h2 class="section-title">Contact</h2>
+            <p class="section-content">
+                Welcome to discuss AI research and ideas. Email: (Please fill in later)
+            </p>
+        </div>
+    </section>
+
+    <!-- ==================== 頁腳 ==================== -->
+    <footer class="footer">
+        <p class="footer-text">© 2024 Neural AI Lab</p>
+    </footer>
+
+    <!-- ==================== JavaScript 語言切換邏輯 ==================== -->
+    <script>
+        /**
+         * 語言切換函數
+         * @param {string} lang - 要切換的語言代碼 ('zh-TW', 'zh-CN', 'en')
+         * 
+         * 功能說明：
+         * 1. 更新所有語言內容區塊的顯示狀態
+         * 2. 更新語言按鈕的高亮狀態
+         * 3. 無刷新、瞬間完成切換
+         */
+        function switchLang(lang) {
+            // 步驟 1：隱藏所有語言內容
+            const allContents = document.querySelectorAll('.lang-content');
+            allContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // 步驟 2：顯示選中的語言內容
+            const selectedContents = document.querySelectorAll('.' + lang);
+            selectedContents.forEach(content => {
+                content.classList.add('active');
+            });
+
+            // 步驟 3：更新按鈕高亮狀態
+            const allBtns = document.querySelectorAll('.lang-btn');
+            allBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 為當前選中的按鈕添加高亮
+            const activeBtn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            // 步驟 4：更新 HTML lang 屬性（有助於搜尋引擎和輔助技術）
+            const htmlLangMap = {
+                'zh-TW': 'zh-TW',
+                'zh-CN': 'zh-CN',
+                'en': 'en'
+            };
+            document.documentElement.lang = htmlLangMap[lang];
+        }
+    </script>
+</body>
+</html>
